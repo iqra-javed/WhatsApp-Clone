@@ -7,6 +7,7 @@ import ChatScreen from '../../components/ChatScreen';
 import getRecipientEmail from '../../utils/getRecipientEmail';
 
 function ChatPage({ messages, chat }) {
+  console.log({messages, chat})
   const [user] = useAuthState(auth);
   return (
     <Container>
