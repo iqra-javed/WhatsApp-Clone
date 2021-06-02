@@ -21,6 +21,7 @@ function Sidebar() {
   const [chatsSnapshot] = useCollection(userCharRef);
 
   const createChat = () => {
+    // TODO: Refactor to use modal
     const input = prompt(
       'Please enter an email address for the user you wish to chat with'
     );
@@ -61,6 +62,7 @@ function Sidebar() {
 
       <Search>
         <SearchIcon />
+        {/* TODO: search feature */}
         <SearchInput placeholder='Search in chats' />
       </Search>
 

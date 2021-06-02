@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import firebase from 'firebase';
 import TimeAgo from 'timeago-react';
 import { Avatar, IconButton } from '@material-ui/core';
@@ -19,6 +19,7 @@ import getRecipientEmail from '../utils/getRecipientEmail';
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
   const [input, setInput] = useState();
+  const endOfMessagesRef = useRef(null);
   const router = useRouter();
   const [messagesSnapshot] = useCollection(
     db
@@ -33,6 +34,13 @@ function ChatScreen({ chat, messages }) {
       .collection('users')
       .where('email', '==', getRecipientEmail(chat.users, user))
   );
+
+  const scrollToBottom = () => {
+    endOfMessagesRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  };
 
   const showMessages = () => {
     if (messagesSnapshot) {
@@ -74,6 +82,7 @@ function ChatScreen({ chat, messages }) {
     });
 
     setInput('');
+    scrollToBottom();
   };
 
   const recipient = recipientSnapshot?.docs?.[0]?.data();
@@ -104,9 +113,11 @@ function ChatScreen({ chat, messages }) {
         </HeaderInformation>
         <HeaderIcons>
           <IconButton>
+            {/* TODO: Support attachments */}
             <AttachFileIcon />
           </IconButton>
           <IconButton>
+            {/* TODO: Add menu */}
             <MoreVertIcon />
           </IconButton>
         </HeaderIcons>
@@ -114,15 +125,17 @@ function ChatScreen({ chat, messages }) {
 
       <MessageContainer>
         {showMessages()}
-        <EndOfMessage />
+        <EndOfMessage ref={endOfMessagesRef} />
       </MessageContainer>
 
       <InputContainer>
+        {/* TODO: support emojis */}
         <InsertEmoticonIcon />
         <Input value={input} onChange={(e) => setInput(e.target.value)} />
         <button hidden disabled={!input} type='submit' onClick={sendMessage}>
           Send Message
         </button>
+        {/* TODO: support voice messages */}
         <MicIcon />
       </InputContainer>
     </Container>
@@ -167,7 +180,9 @@ const MessageContainer = styled.div`
   min-height: 90vh;
 `;
 
-const EndOfMessage = styled.div``;
+const EndOfMessage = styled.div`
+  margin-bottom: 50px;
+`;
 
 const InputContainer = styled.form`
   display: flex;
