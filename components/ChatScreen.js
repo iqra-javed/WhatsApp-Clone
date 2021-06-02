@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import firebase from 'firebase';
+import TimeAgo from 'timeago-react';
 import { Avatar, IconButton } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -88,7 +89,18 @@ function ChatScreen({ chat, messages }) {
         )}
         <HeaderInformation>
           <h3>{recipientEmail}</h3>
-          <p>Last seen ...</p>
+          {recipientSnapshot ? (
+            <p>
+              Last active:{' '}
+              {recipient?.lastSeen?.toDate() ? (
+                <TimeAgo datetime={recipient?.lastSeen?.toDate()} />
+              ) : (
+                'Unavailable'
+              )}
+            </p>
+          ) : (
+            <p>Loading Last active ...</p>
+          )}
         </HeaderInformation>
         <HeaderIcons>
           <IconButton>
